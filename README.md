@@ -41,6 +41,8 @@ The pipeline automatically:
 
 ------------------------------------------------------------------------
 
+![alt text](<architecture.png>)
+
 # Prerequisites
 
 Install the following tools on your local machine or server.
@@ -257,11 +259,9 @@ Pipeline automatically:
 4.  Updates Kubernetes deployment
 5.  Deploys latest version
 
-![alt text](<ChatGPT Image Mar 8, 2026, 03_02_20 PM.png>)
-
 ------------------------------------------------------------------------
 
-# Technologies Used\
+# Technologies Used
 
 Infrastructure Provisioning ---> Terraform\
 Containerization ---> Docker\

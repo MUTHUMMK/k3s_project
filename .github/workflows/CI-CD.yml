@@ -38,7 +38,7 @@ jobs:
     - name: Update Kubernetes Deploy YAML
       run: |
         sudo chmod -R 777 .
-        cd ./k3s-manifeast
+        cd ./k3s-manifest
         sed -i "s|image: .*|image: $IMAGE_NAME:${{ steps.vars.outputs.TAG }}|g" deploy.yml
     - name: Debug files
       run: |

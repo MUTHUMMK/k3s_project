@@ -22,6 +22,7 @@ The pipeline automatically:
     .
     ├── .github
     │   └── workflows
+    │          └── CI-CD.yml
     │
     ├── k3s_infra_create
     │   ├── backend.tf
@@ -260,8 +261,10 @@ Pipeline automatically:
 
 # Technologies Used
 
-Terraform\
-Docker\
-K3s Kubernetes\
-GitHub Actions\
-AWS Cloud
+Infrastructure Provisioning ---> Terraform\\
+Containerization ---> Docker\\
+Container Orchestration ---> K3s\\
+CI/CD Automation ---> GitHub Actions\\
+Cloud Platform ---> AWS
+
+

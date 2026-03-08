@@ -159,9 +159,9 @@ Settings → Secrets and Variables → Actions → New Repository Secret
 
 Create the following:
 
-  DOCKER_USERNAME   DockerHub username
-  DOCKER_PASSWORD   DockerHub access token
-  IMAGE_NAME        Docker image repository
+  DOCKER_USERNAME --> DockerHub username\
+  DOCKER_PASSWORD -->  DockerHub access token\
+  IMAGE_NAME --> Docker image repository\
 
 Example:
 
@@ -178,51 +178,60 @@ Create:
 Example:
 
 ``` yaml
-name: Build and Deploy Application
+name: Build and Push Docker Image & Deploy Application
 
 on:
   push:
     branches:
       - main
 
+env:
+  IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
+
 jobs:
-  build-and-deploy:
-    runs-on: self-hosted
+  build:
+    runs-on: k3
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
 
-      - name: Docker Hub Login
-        run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login           -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
-      - name: Build Docker Image
-        run: |
-          docker build -t ${{ secrets.IMAGE_NAME }}:${{ github.sha }} .
+    - name: Get Commit SHA
+      id: vars
+      run: echo "TAG=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Push Docker Image
-        run: |
-          docker push ${{ secrets.IMAGE_NAME }}:${{ github.sha }}
+    - name: Login to DockerHub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Update Kubernetes Deployment
-        run: |
-          kubectl set image deployment/html-app           html-app=${{ secrets.IMAGE_NAME }}:${{ github.sha }}
+    - name: Build Docker Image
+      run: |
+        docker build -t $IMAGE_NAME:${{ steps.vars.outputs.TAG }} .
+
+    - name: Push Docker Image
+      run: |
+        docker push $IMAGE_NAME:${{ steps.vars.outputs.TAG }}
+
+    - name: Update Kubernetes Deploy YAML
+      run: |
+        sudo chmod -R 777 .
+        cd ./k3s-manifeast
+        sed -i "s|image: .*|image: $IMAGE_NAME:${{ steps.vars.outputs.TAG }}|g" deploy.yml
+    - name: Debug files
+      run: |
+       pwd
+       ls -R
+
+    - name: Deploy Manifest files
+      run: |
+        kubectl apply -f ./k3s-manifeast/deploy.yml
+        kubectl apply -f ./k3s-manifeast/svc.yml
+        kubectl apply -f ./k3s-manifeast/ingress.yml
+
 ```
-
-------------------------------------------------------------------------
-
-# Deploy Kubernetes Manifests
-
-    cd k3s-manifest
-    kubectl apply -f .
-
-This will create:
-
--   Deployment
--   Service
--   Ingress
-
 ------------------------------------------------------------------------
 
 # Access Application

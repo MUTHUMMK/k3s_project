@@ -263,7 +263,6 @@ Pipeline automatically:
 
 # Technologies Used\
 
-Infrastructure Provisioning ---> Terraform\\
 Infrastructure Provisioning ---> Terraform\
 Containerization ---> Docker\
 Container Orchestration ---> K3s\

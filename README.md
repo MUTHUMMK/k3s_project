@@ -228,9 +228,9 @@ jobs:
 
     - name: Deploy Manifest files
       run: |
-        kubectl apply -f ./k3s-manifeast/deploy.yml
-        kubectl apply -f ./k3s-manifeast/svc.yml
-        kubectl apply -f ./k3s-manifeast/ingress.yml
+        kubectl apply -f ./k3s-manifest/deploy.yml
+        kubectl apply -f ./k3s-manifest/svc.yml
+        kubectl apply -f ./k3s-manifest/ingress.yml
 
 ```
 ------------------------------------------------------------------------

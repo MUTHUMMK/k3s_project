@@ -5,9 +5,9 @@ metadata:
 spec:
   selector:
     app: nginx
-  #type: NodePort
+  type: NodePort
   ports:
     - protocol: TCP
       port: 80          # Service port inside cluster
       targetPort: 80    # Pod container port
-    #  nodePort: 30800   # NodePort on EC2
+      nodePort: 30800   # NodePort on EC2
